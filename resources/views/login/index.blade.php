@@ -19,15 +19,15 @@
 
 					<div class="wrap-input100 validate-input m-b-23" data-validate="请输入用户名">
 						<span class="label-input100">用户名</span>
-						<input class="input100" type="text" name="username" placeholder="请输入用户名" autocomplete="off">
+						<input class="input100" type="text" id="username" name="username" placeholder="请输入用户名或邮箱号" autocomplete="off">
 						<span class="focus-input100" data-symbol="&#xf206;"></span>
 					</div>
 
 					<div class="wrap-input100 validate-input" data-validate="请输入密码">
 						<span class="label-input100">密码</span>
-						<input class="input100" type="password" name="pass" placeholder="请输入密码">
+						<input class="input100" type="password" id="pwd" name="pwd" placeholder="请输入密码">
 						<span class="focus-input100" data-symbol="&#xf190;"></span>
-					</div>
+                    </div>
 
 					<div class="text-right p-t-8 p-b-31">
 						<a href="javascript:">忘记密码？</a>
@@ -35,8 +35,8 @@
 
 					<div class="container-login100-form-btn">
 						<div class="wrap-login100-form-btn">
-							<div class="login100-form-bgbtn"></div>
-							<button class="login100-form-btn">登 录</button>
+                            <div class="login100-form-bgbtn"></div>
+                            <a href="javascript:;" id="btn" class="login100-form-btn">登陆</a>
 						</div>
 					</div>
 
@@ -69,3 +69,35 @@
 </html>
 <script src="\index\login\js\jquery-3.2.1.min.js"></script>
 <script src="\index\login\js\main.js"></script>
+<script src="\layui\layui.all.js"></script>
+<script src="\layui\layui.js"></script>
+<script>
+$(function(){
+    layui.use(['layer'],function(){
+        var layer = layui.layer;
+        $('#btn').click(function(){
+        var username=$('#username').val();
+        var pwd=$('#pwd').val()
+        if(username==""){
+            layer.msg('用户或邮箱不能为空');
+            return false;
+        }
+        if(pwd==""){
+            layer.msg('用户或邮箱不能为空');
+            return false;
+        }
+        $.post(
+            '/login/login',
+            {username:username,pwd:pwd},
+            function(res){
+                layer.msg(res.font,{icon:res.code});
+                if(res.code=='6'){
+                    location.href="/"
+                }
+            },
+        )
+    })
+    })
+})
+
+</script>

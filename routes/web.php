@@ -15,11 +15,15 @@ Route::get('/', function () {
 });
 //登录视图
 Route::get('login/index','Login\LoginController@index');
+Route::post('login/login','Login\LoginController@login');
+
 //注册
 Route::get('login/register','Login\LoginController@register');
-Route::post('login/add','Login\LoginController@add');
+Route::any('login/add','Login\LoginController@add');
 
 //发送邮箱
 Route::post('login/mail','Login\LoginController@mail');
+
+
 
 ?>

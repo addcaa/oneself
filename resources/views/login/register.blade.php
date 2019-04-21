@@ -15,7 +15,6 @@
 	<link rel="stylesheet" type="text/css" href="\index\login\css\util.css">
     <link rel="stylesheet" type="text/css" href="\index\login\css\main.css">
     <link rel="stylesheet" type="text/css" href="\layui\css\layui.css">
-
 </head>
 <body>
 	<div class="limiter">
@@ -39,17 +38,24 @@
                     </div>
 
 					<div class="wrap-input100 validate-input m-b-23" data-validate="请输入密码">
+						<span class="label-input100">验证码</span>
+						<input class="input100" type="test" id="code" name="code" placeholder="请输入验证码"  autocomplete="off">
+						<span class="focus-input100" data-symbol="&#xf190;"></span>
+                    </div>
+
+                    <div class="wrap-input100 validate-input m-b-23" data-validate="请输入密码">
 						<span class="label-input100">密码</span>
 						<input class="input100" type="password" id="pwd" name="pwd" placeholder="请输入密码">
 						<span class="focus-input100" data-symbol="&#xf190;"></span>
 					</div>
-
                     <div class="wrap-input100 validate-input" data-validate="请输入确认密码">
 						<span class="label-input100">确认密码</span>
 						<input class="input100" type="password" id="password"name="password" placeholder="请输入确认密码">
 						<span class="focus-input100" data-symbol="&#xf190;"></span>
                     </div>
-
+                    <div class="text-right p-t-8 p-b-31">
+						<a href="/login/index">立即登录</a>
+					</div>
 					<div class="text-right p-t-8 p-b-31">
 					</div>
 
@@ -86,8 +92,6 @@ layui.use('layer', function(){
                 var timer = setInterval(function(){
                 time--;
                     $("#cation").val("("+time+"秒)重发").attr('disabled',true);
-                    // layer.msg('稍等片刻');
-                    //  return false;
                 if(time==0){
                     clearInterval(timer);
                 $("#cation").val("发送验证码").attr('disabled',false);
@@ -97,18 +101,18 @@ layui.use('layer', function(){
                 '/login/mail',
                 {email:email},
                 function(res){
-                    layer.msg(res.font,{icon:res.code});
-
-
+                layer.msg(res.font,{icon:res.code});
             }
             );
         })
     })
+    //注册
     $(function(){
         $(".btn").click(function(){
             var username=$('#username').val();
             var usermail=$("input[name='usermail']").val();
-            console.log(usermail);
+            // console.log(usermail);
+            var code=$("#code").val();
             var pwd=$('#pwd').val();
             var password=$('#password').val();
             // layer.msg('hello');
@@ -122,11 +126,13 @@ layui.use('layer', function(){
                 layer.msg('用户名由中文,英文字母和数字及下划线组成');
                 return false;
             }
+
             if(usermail==""){
                 layer.msg('请输入邮箱号');
                 return false;
-            }else if(res.test(usertel)!=true){
-                layer.msg("邮箱号有误，请重填");
+            }
+            if(code==""){
+                layer.msg('请输入验证码');
                 return false;
             }
             if(pwd==""){
@@ -143,12 +149,15 @@ layui.use('layer', function(){
                 layer.msg('确认密码和密码不一致');
                 return false;
             }
+
             $.post(
                 '/login/add',
-                {username:username,usertel:usertel,pwd:pwd,password:password},
+                {username:username,usermail:usermail,pwd:pwd,password:password,code:code},
                 function(res){
                     layer.msg(res.font,{icon:res.code});
-                    console.log(res);
+                    if(res.font=='注册成功'){
+                        location.href="index"
+                    }
                 }
             );
         })
